@@ -17,12 +17,12 @@ interface PageProps {
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Page = ({ page, translateX, index }: PageProps) => {
+  const inputRange = [
+    (index - 1) * SCREEN_WIDTH,
+    index * SCREEN_WIDTH,
+    (index + 1) * SCREEN_WIDTH,
+  ];
   const rCircleStyle = useAnimatedStyle(() => {
-    const inputRange = [
-      (index - 1) * SCREEN_WIDTH,
-      index * SCREEN_WIDTH,
-      (index + 1) * SCREEN_WIDTH,
-    ];
     const scale = interpolate(
       translateX.value,
       inputRange,
@@ -37,13 +37,30 @@ const Page = ({ page, translateX, index }: PageProps) => {
       ],
     };
   });
+
+  const rImageStyle = useAnimatedStyle(() => {
+    const rotation = interpolate(
+      translateX.value,
+      inputRange,
+      [0, 0, 1],
+      Extrapolation.CLAMP
+    );
+    return {
+      transform: [
+        {
+          rotate: `${rotation * 2 * Math.PI}rad`,
+        },
+      ],
+    };
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.circleContainer}>
         <Animated.View style={[styles.circle, rCircleStyle]} />
         <Animated.Image
           source={page.source}
-          style={[styles.image]}
+          style={[styles.image, rImageStyle]}
           resizeMode="contain"
         />
       </View>
