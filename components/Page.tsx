@@ -45,7 +45,11 @@ const Page = ({ page, translateX, index }: PageProps) => {
       [0, 0, 1],
       Extrapolation.CLAMP
     );
+
+    const opacity = interpolate(translateX.value, inputRange, [0.5, 1, 0.5]);
+
     return {
+      opacity,
       transform: [
         {
           rotate: `${rotation * 2 * Math.PI}rad`,
